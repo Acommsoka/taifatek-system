@@ -106,6 +106,30 @@ app.put('/api/students/:id/attend', async (req, res) => {
   }
 });
 
+// New POST route for /api/register-student
+app.post('/api/register-student', async (req, res) => {
+  const { name, email } = req.body;
+
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Name and email are required.' });
+  }
+
+  try {
+    const existingStudent = await pool.query('SELECT * FROM students WHERE email = $1', [email]);
+    if (existingStudent.rows.length > 0) {
+      return res.status(409).json({ error: 'A student with this email already exists.' });
+    }
+
+    const result = await pool.query(
+      'INSERT INTO students (name, email, attendance) VALUES ($1, $2, $3) RETURNING *',
+      [name, email, '[]']
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error registering student:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // --- START THE SERVER ---
 app.listen(PORT, () => {
