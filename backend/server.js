@@ -5,13 +5,14 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg'); // PostgreSQL client
 
+const app = express(); // Define 'app' first
+
 // Set up a basic GET route for the homepage (/)
 app.get('/', (req, res) => {
   res.send('Your backend server is working!');
 });
 
 // --- CONFIGURATION ---
-const app = express();
 const PORT = process.env.PORT || 3001; // Use port from environment or default to 3001
 
 // --- DATABASE CONNECTION ---
