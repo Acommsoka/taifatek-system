@@ -3,14 +3,11 @@
 // Import necessary packages
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg'); // PostgreSQL client
+const { Pool } = require('pg');
+const path = require('path'); // Add this at the top with other requires
+require('dotenv').config(); // Load environment variables from .env
 
-const app = express(); // Define 'app' first
-
-// Set up a basic GET route for the homepage (/)
-app.get('/', (req, res) => {
-  res.send('Your backend server is working!');
-});
+const app = express();
 
 // --- CONFIGURATION ---
 const PORT = process.env.PORT || 3001; // Use port from environment or default to 3001
@@ -28,6 +25,7 @@ const pool = new Pool({
 // --- MIDDLEWARE ---
 app.use(cors()); // Enable Cross-Origin Resource Sharing to allow frontend to connect
 app.use(express.json()); // Enable the server to parse JSON-formatted request bodies
+app.use(express.static(path.join(__dirname, '..', 'public'))); // Serve static files from ../public
 
 // --- API ROUTES (ENDPOINTS) ---
 
